@@ -1,0 +1,33 @@
+<footer class="footer">
+    <div class="container text-center pt-3">
+        <ul class="list-inline">
+            <li class="list-inline-item">
+                <a href="mailto:{{ site.email }}" title="Email me">
+                    {% octicon mail height:32 %}
+                </a>
+            </li>
+            <li class="list-inline-item">
+                <a href="https://github.com/{{ site.github_org }}" title="GitHub">
+                    {% octicon mark-github height:32 %}
+                </a>
+            </li>
+        </ul>
+        <span class="copyright text-muted">
+             HERMES - Health Economics in R for Modelling and Evaluation Studies
+            &nbsp;|&nbsp;
+            {{ site.time | date: '%Y' }}
+        </span>
+    </div>
+</footer>
+<script src="{{ "/assets/js/bundle.js" | relative_url }}"></script>
+<script>
+    var projects = $('.project');
+    projects.on('mouseover', function () {
+        $(this).addClass("active");
+    });
+
+    projects.on('mouseout', function () {
+        $(this).removeClass("active");
+    });
+
+</script>

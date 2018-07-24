@@ -1,0 +1,28 @@
+<div class="row mt-5">
+    {% for person in include.items %}
+    <div class="col-6 col-md-3 text-center">
+        {% if person.img %}
+        <img src="{{ person.img }}" class="rounded-circle img-thumbnail" alt="{{ person.name }}">
+        {% endif %}
+        {% if person.name %}
+        <h5 class="mt-2">{{ person.name }}</h5>
+        {% endif %}
+        {% if person.institution %}
+        <p class="text-muted">{{ person.institution }}</p>
+        {% endif %}
+        <div class="text-muted">
+            {% if person.website %}
+            <a href="{{ person.website }}" title="Website">
+                {% octicon home height:20 %}
+            </a>
+            <span class="mt-2">&nbsp;</span>
+            {% endif %}
+            {% if person.github %}
+            <a href="{{ person.github }}" title="GitHub">
+                {% octicon mark-github height:20 color="#6c757d" %}
+            </a>
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+</div>

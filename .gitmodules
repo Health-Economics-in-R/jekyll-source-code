@@ -1,0 +1,3 @@
+[submodule "site"]
+	path = site
+	url = git@github.com:Health-Economics-in-R/health-economics-in-r.github.io.git

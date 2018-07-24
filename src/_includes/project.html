@@ -1,0 +1,37 @@
+<div class="row mt-5">
+    {% for item in include.items %}
+        {% assign url = item.url || item.github %}
+        <div class="col-12 col-sm-6 col-md-4">
+            <div class="card project">
+                {% if item.img %}
+                    <div class="card-header">
+                        <a href="{{ url }}"><span class="hidden-link"></span></a>
+                        <img src="{{ item.img }}" class="card-logo"/>
+                    </div>
+                {% endif %}
+                <div class="card-body">
+                    <a href="{{ url }}"><span class="hidden-link"></span></a>
+                    {% if item.name %}
+                        <h5 class="card-title">{{ item.name }}</h5>
+                    {% endif %}
+                    {% if item.desc %}
+                        <p class="card-text">{{ item.desc }}</p>
+                    {% endif %}
+                </div>
+                <div class="card-footer text-center text-muted">
+                    {% if item.url %}
+                        <a href="{{ item.url }}" title="Website">
+                            {% octicon home height:20 %}
+                        </a>
+                        <span class="mt-2">&nbsp;</span>
+                    {% endif %}
+                    {% if item.github %}
+                        <a href="{{ item.github }}" title="GitHub">
+                            {% octicon mark-github height:20 color="#6c757d" %}
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>

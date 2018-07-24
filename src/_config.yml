@@ -1,0 +1,19 @@
+title: HERMES
+description: Health Economics in R for Modelling and Evaluations Studies.
+email: your-email@domain.com
+contact: Your Name
+long_description: > # this means to ignore newlines
+  Write an awesome description for your new site here. You can edit this
+  line in _config.yml. It will appear in your document head meta (for
+  Google search results) and in your feed.xml site description.
+github_org: health-economics-in-r
+plugins:
+  - jekyll-octicons
+  - jekyll-maps
+header_pages:
+  - about.md
+  - projects.md
+  - people.md
+maps:
+  google:
+    api_key: AIzaSyABGwi8GI3d4p4i9Lrcjg5BfIBNcEz9BIQ
