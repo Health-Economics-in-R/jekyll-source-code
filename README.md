@@ -2,6 +2,12 @@ This repo contains the Jekyll source code for the HERMES website.
 
 ## Local development
 
+Make sure to clone this repo with the `--recursive` flag, i.e.
+```
+git clone https://github.com/Health-Economics-in-R/jekyll-source-code.git --recursive
+
+```
+
 Instructions for installing Jekyll are here: https://jekyllrb.com/docs/usage/
 
 All Jekyll source code is in the `src` folder. To view your changes locally, run `./serve.sh`.
