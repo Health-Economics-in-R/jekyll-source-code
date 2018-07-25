@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="title" content="HERMES" />
+    <meta name="description" content="Health Economics in R for Modelling and Evaluations Studies." />
+    <link rel="stylesheet" href="/assets/css/theme.css">
+    <link rel="shortcut icon" type="image/x-icon" href="/assets/images/favicon.ico">
+<script type='text/javascript'>
+  /* global google */
+/* global MarkerClusterer */
+// eslint-disable-next-line no-unused-vars
+var jekyllMaps = (function() {
+  'use strict'
+  var clusterSettings = {}
+  var clusterReady = false
+  var mapReady = false
+  var options = {}
+  var data = []
+  var maps = []
+
+  return {
+    initializeMap: initializeMap,
+    initializeCluster: initializeCluster,
+    register: register
+  }
+
+  /**
+   * Setup Google Maps options and call renderer.
+   */
+  function initializeMap() {
+    options = {
+      mapTypeId: google.maps.MapTypeId.ROADMAP,
+      center: new google.maps.LatLng(0, 0)
+    }
+    mapReady = true
+    render()
+  }
+
+  /**
+   * Register map data to be rendered once Google Maps API is loaded.
+   *
+   * @param string id
+   * @param Array locations
+   * @param Object settings
+   */
+  function register(id, locations, options) {
+    data.push({ id: id, locations: locations, options: options })
+    render()
+  }
+
+  /**
+   * Render maps data if Google Maps API is loaded.
+   */
+  function render() {
+    if (!mapReady) return
+
+    while (data.length > 0) {
+      var item = data.pop()
+      var bounds = new google.maps.LatLngBounds()
+      var mapOptions = Object.assign({}, options, item.options)
+      var map = new google.maps.Map(
+        document.getElementById(item.id),
+        mapOptions
+      )
+      var infoWindow = new google.maps.InfoWindow()
+      var markers = item.locations.map(createMarker)
+
+      map.fitBounds(bounds)
+      google.maps.event.addListenerOnce(map, 'idle', function() {
+        if (this.customZoom) this.setZoom(this.customZoom)
+      })
+      if (mapOptions.useCluster) {
+        maps.push({ map: map, markers: markers })
+        processCluster()
+      }
+    }
+
+    function createMarker(location) {
+      var position = new google.maps.LatLng(
+        location.latitude,
+        location.longitude
+      )
+      bounds.extend(position)
+      if (!mapOptions.showMarker) return false
+
+      var marker = new google.maps.Marker({
+        position: position,
+        title: location.title,
+        image: location.image,
+        icon: location.icon || mapOptions.markerIcon,
+        url: markerUrl(mapOptions.baseUrl, location.url),
+        url_text: location.url_text,
+        map: map
+      })
+      if (mapOptions.showMarkerPopup) marker.addListener('click', markerPopup)
+
+      return marker
+    }
+
+    function markerUrl(baseUrl, url) {
+      if (/^(https?|\/\/)/.test(url)) return url
+
+      return url.length > 0 ? baseUrl + url : ''
+    }
+
+    function markerPopup() {
+      var content = '<div class="map-info-window"><h5>' + this.title + '</h5>'
+      var imageTag =
+        this.image.length > 0 &&
+        '<img src="' + this.image + '" alt="' + this.title + '"/>'
+      if (this.url.length > 0) {
+        var linkContent = imageTag || this.url_text || 'View'
+        content += '<a href="' + this.url + '">' + linkContent + '</a>'
+      } else if (imageTag) {
+        content += imageTag
+      }
+      content += '</div>'
+      infoWindow.setContent(content)
+      infoWindow.open(map, this)
+    }
+  }
+
+  function initializeCluster(settings) {
+    clusterReady = true
+    clusterSettings = settings || {}
+    processCluster()
+  }
+
+  function processCluster() {
+    if (!clusterReady) return
+
+    while (maps.length > 0) {
+      var obj = maps.pop()
+      // eslint-disable-next-line no-new
+      new MarkerClusterer(obj.map, obj.markers, {
+        gridSize: clusterSettings.grid_size || 25,
+        imagePath:
+          'https://cdn.rawgit.com/googlemaps/js-marker-clusterer/gh-pages/images/m'
+      })
+    }
+  }
+})()
+/* Object.assign polyfill */
+if (typeof Object.assign !== 'function') {
+  Object.assign = function(target) {
+    'use strict'
+    if (target == null) {
+      throw new TypeError('Cannot convert undefined or null to object')
+    }
+
+    target = Object(target)
+    for (var index = 1; index < arguments.length; index++) {
+      var source = arguments[index]
+      if (source != null) {
+        for (var key in source) {
+          if (Object.prototype.hasOwnProperty.call(source, key)) {
+            target[key] = source[key]
+          }
+        }
+      }
+    }
+    return target
+  }
+}
+
+</script>
+<script async defer src='https://maps.googleapis.com/maps/api/js?key=AIzaSyABGwi8GI3d4p4i9Lrcjg5BfIBNcEz9BIQ&callback=jekyllMaps.initializeMap'></script>
+
+<script async defer src='https://cdn.rawgit.com/googlemaps/js-marker-clusterer/gh-pages/src/markerclusterer.js'
+        onload='jekyllMaps.initializeCluster({})'></script>
+
+</head><body><header class="site-header" role="banner">
+
+    <div class="wrapper"><nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <a class="navbar-brand" href="/">HERMES</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse"
+                        data-target="#mainNav" aria-controls="mainNav"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="mainNav">
+                    <ul class="navbar-nav mr-auto"><li class="nav-item">
+                                    <a class="nav-link "
+                                       href="/about.html">About</a>
+                                </li><li class="nav-item">
+                                    <a class="nav-link "
+                                       href="/projects.html">Projects</a>
+                                </li><li class="nav-item">
+                                    <a class="nav-link "
+                                       href="/people.html">People</a>
+                                </li></ul>
+                </div>
+            </nav></div>
+</header>
+<main class="container pt-3 pb-5" aria-label="Content">
+        <h1></h1>
+
+<h2>
+Health economics in R: Scoping workshop
+</h2>
+<hr />
+
+<h5 id="venue">Venue:</h5>
+<p>Seminar and Learning Centre 5.06 (SALC 6),
+Sherfield Building,
+South Kensington Campus,
+Imperial College London, SW7 2BX</p>
+
+<h5 id="date">Date:</h5>
+<p>Friday 30th November 2018</p>
+
+<div>
+  <p><img src="/assets/images/dilbert-requirements.gif" alt="image-title-here" height="200px" width="700px" /></p>
+</div>
+
+<blockquote>
+  <p><em>Give me six hours to chop down a tree and I will spend the first four sharpening the axe -</em> 
+Abraham Lincoln</p>
+</blockquote>
+
+<h4 id="background">Background</h4>
+<p>The evaluation of the societal value of interventions in health are informed by health economics but the most commonly used computational tools, often packages interacting with Excel, are limited in their ability to analyse increasingly large and complex data sets (e.g. in precision medicine or using “Big Data”) in short time-frames (e.g. for emergency preparedness and response), and especially in the context of infectious disease modelling and associated probabilistic sensitivity analyses.</p>
+
+<h4 id="aims">Aims</h4>
+<p>Our goal is to develop novel, user-friendly analysis tools for widespread adoption to enable better-informed, rapid decision making by health economists, practitioners and others using widely available software.</p>
+
+<h4 id="format">Format</h4>
+<p>An initial day workshop will be held at <a href="https://www.imperial.ac.uk/">Imperial College London</a> to scope and plan addressing current gaps, limitations and opportunities in the software commonly used for health economics methodologies, and discuss and map the requirements for conducting economic evaluations using the statistical software language R.
+Workshop attendees will be invited from a range of areas to bring differing health economics problems and experience.</p>
+
+<h4 id="outcomes">Outcomes</h4>
+<p>The workshop will identify and clarify:</p>
+
+<ul>
+  <li>What is the demand for these tools and by whom?</li>
+  <li>What are the issues with current software?</li>
+  <li>What can and should the new tools do better?</li>
+</ul>
+
+<p>The workshop will kick start prototypes of functions, data and packages to be released publicly (e.g. <a href="https://cran.r-project.org/">CRAN</a>), as well as training courses in using the new tools and papers.</p>
+
+<p>If you have any questions please contact me at <a href="mailto:ngreen1@ic.ac.uk">ngreen1@ic.ac.uk</a></p>
+
+<hr />
+
+<h4 id="preliminary-program">Preliminary program</h4>
+
+<p>9:00-9:30 Arrival w/ <em>Coffee</em></p>
+
+<p>9:30-9.45 Welcome [<a href="https://www.imperial.ac.uk/people/nathan.green">Nathan Green, Imperial College London</a>]</p>
+
+<p>9:45-10.15 <em>Why are we here and what do we hope to achieve?</em></p>
+
+<p>10:15-xxxx <em>Current tools for health economics</em></p>
+
+<p>General overview and particular strengths and weaknesses</p>
+
+<p>10:30-11:00	TreeAge [tbc]</p>
+
+<p>11:00-11:30	Microsoft Excel [tbc]</p>
+
+<p>11:30-12:00 R [Nathan Green]</p>
+
+<p><em>Lunch</em></p>
+
+<p>1:00-xxxx <em>Identify health economic modelling needs &amp; challenges</em></p>
+
+<ul>
+  <li>Present an example problem and solution in R [tbc]</li>
+  <li>List of more examples problems to give idea of range of possible issues</li>
+  <li>Determine pressing problems, issues or needs (current or future)</li>
+  <li>In groups use these to discuss how to combine, narrow to core problems</li>
+</ul>
+
+<p>2:00-xxxx <em>Clarify modelling needs</em></p>
+
+<p>In groups, answer the following questions and report back:</p>
+
+<ul>
+  <li>Why do these need to be addressed? What will happen if they aren’t?</li>
+  <li>How wide spread is the issue? How long has it been a problem and what the impact?</li>
+  <li>What evidence is there of this?</li>
+</ul>
+
+<p>3:00-xxxx	<em>Identify possible opportunities &amp; solutions</em></p>
+
+<ul>
+  <li>Rank and prioritise problems</li>
+  <li>With the help of an R expert, in each group think about ‘if we could…’, ‘if there was a way to…’</li>
+</ul>
+
+<p>4:00-xxxx	<em>Next steps/Roadmap</em></p>
+
+<ul>
+  <li>Discuss and decide implementation</li>
+  <li>Form working groups</li>
+  <li>Task assignment</li>
+  <li>Set timelines and milestones</li>
+  <li>Communication channels e.g. <a href="https://github.com/">GitHub</a></li>
+</ul>
+
+<h5 id="location">Location</h5>
+
+<div id="bc18651e-1d23-4215-9c1d-44370a76110d" style="width:600px;height:400px;"></div>
+<script type="text/javascript">
+  jekyllMaps.register(
+    'bc18651e-1d23-4215-9c1d-44370a76110d',
+    [{"latitude":51.496077,"longitude":-0.165418,"title":"Health economics in R: Scoping workshop","icon":null,"url":"/jekyll/update/2018/07/18/post.html","url_text":null,"image":""}],
+    {"baseUrl":"/","useCluster":true,"showMarker":true,"showMarkerPopup":true,"markerIcon":null,"customZoom":13}
+  );
+</script>
+
+
+
+</main><footer class="footer">
+    <div class="container text-center pt-3">
+        <ul class="list-inline">
+            <li class="list-inline-item">
+                <a href="mailto:your-email@domain.com" title="Email me">
+                    <svg height="32" class="octicon octicon-mail" viewBox="0 0 14 16" version="1.1" width="28" aria-hidden="true"><path fill-rule="evenodd" d="M0 4v8c0 .55.45 1 1 1h12c.55 0 1-.45 1-1V4c0-.55-.45-1-1-1H1c-.55 0-1 .45-1 1zm13 0L7 9 1 4h12zM1 5.5l4 3-4 3v-6zM2 12l3.5-3L7 10.5 8.5 9l3.5 3H2zm11-.5l-4-3 4-3v6z"/></svg>
+                </a>
+            </li>
+            <li class="list-inline-item">
+                <a href="https://github.com/health-economics-in-r" title="GitHub">
+                    <svg height="32" class="octicon octicon-mark-github" viewBox="0 0 16 16" version="1.1" width="32" aria-hidden="true"><path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+                </a>
+            </li>
+        </ul>
+        <span class="copyright text-muted">
+             HERMES - Health Economics in R for Modelling and Evaluation Studies
+            &nbsp;|&nbsp;
+            2018
+        </span>
+    </div>
+</footer>
+<script src="/assets/js/bundle.js"></script>
+<script>
+    var projects = $('.project');
+    projects.on('mouseover', function () {
+        $(this).addClass("active");
+    });
+
+    projects.on('mouseout', function () {
+        $(this).removeClass("active");
+    });
+
+</script></body>
+
+</html>
