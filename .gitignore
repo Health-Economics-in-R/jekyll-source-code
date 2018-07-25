@@ -3,5 +3,6 @@ src/_site/*
 src/node_modules/
 src/.sass-cache/
 src/.Rproj.user
-
+*.ini
+jekyll-source-code.lnk
 .Rproj.user
