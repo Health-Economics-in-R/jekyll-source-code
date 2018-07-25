@@ -4,3 +4,4 @@ src/node_modules/
 src/.sass-cache/
 src/.Rproj.user
 
+.Rproj.user
